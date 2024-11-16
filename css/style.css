@@ -1,0 +1,107 @@
+/* css/style.css */
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Form Styles */
+form {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+label {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+select, input[type="time"] {
+    padding: 5px;
+    font-size: 1em;
+}
+
+button {
+    padding: 5px 15px;
+    font-size: 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Toggle Button Styles */
+.toggle-button {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.toggle-button:hover {
+    background-color: #0056b3;
+}
+
+/* Departures Section */
+#departures {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.stop-section {
+    margin-bottom: 20px;
+}
+
+.stop-section h3 {
+    color: #555;
+}
+
+/* Departure List Styles */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 10px;
+    background-color: white;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+ul li button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+ul li button:hover {
+    background-color: #c82333;
+}
