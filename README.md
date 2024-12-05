@@ -22,11 +22,11 @@ This project is a web application for managing and displaying bus departure time
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/lembitlindau/bus-departure-times.git
+    git clone git@github.com:lembitlindau/Bussiajad.git
     ```
 2. Navigate to the project directory:
     ```sh
-    cd bus-departure-times
+    cd bussiajad
     ```
 3. Install dependencies:
     ```sh
