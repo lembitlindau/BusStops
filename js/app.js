@@ -1,3 +1,5 @@
+// js/app.js
+
 // Normalize a string for use in IDs or keys (removing special characters)
 function normalizeString(str) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
@@ -5,9 +7,23 @@ function normalizeString(str) {
 
 // Initialize departures with data from localStorage or default empty arrays
 const departures = JSON.parse(localStorage.getItem('busSchedule')) || {
-    Lehmja: [],
-    Tornimäe: [],
+    Lehmja: {
+        weekday: [],
+        weekend: []
+    },
+    Tornimäe: {
+        weekday: [],
+        weekend: []
+    },
 };
+debugger;
+// Function to determine if today is a weekend
+function isWeekend() {
+    const today = new Date();
+    const day = today.getDay(); // 0 = Sunday, 6 = Saturday
+    return day === 0 || day === 6;
+}
+
 
 // Function to save departures to localStorage
 function saveToLocalStorage() {
@@ -70,6 +86,12 @@ function getNextDepartures(stop) {
     return nextThree.map(minutesToTimeString);
 }
 
+// Object to track the display state for each stop
+const displayState = {
+    Lehmja: false,      // false means showing next three
+    Tornimäe: false,
+};
+
 // Function to update the UI
 function updateUI() {
     // Update the list for each bus stop
@@ -78,11 +100,18 @@ function updateUI() {
         const list = document.getElementById(`${normalizedStop}-list`);
         list.innerHTML = ''; // Clear the list
 
-        // Get the next three departures
-        const nextDepartures = getNextDepartures(stop);
+        let departuresToShow = [];
+
+        if (displayState[stop]) {
+            // Show all departures
+            departuresToShow = departures[stop].slice().sort();
+        } else {
+            // Show next three departures
+            departuresToShow = getNextDepartures(stop);
+        }
 
         // Add each departure time as a list item with a remove button
-        nextDepartures.forEach((time) => {
+        departuresToShow.forEach((time) => {
             const listItem = document.createElement('li');
 
             const timeSpan = document.createElement('span');
@@ -98,7 +127,24 @@ function updateUI() {
             listItem.appendChild(removeButton);
             list.appendChild(listItem);
         });
+
+        // Update the toggle button text
+        const toggleButton = document.querySelector(`.toggle-button[data-stop="${stop}"]`);
+        if (displayState[stop]) {
+            toggleButton.textContent = 'Show Less';
+        } else {
+            toggleButton.textContent = 'Show All';
+        }
     });
+}
+
+// Function to handle toggle button clicks
+function handleToggle(event) {
+    const stop = event.target.getAttribute('data-stop');
+    if (stop) {
+        displayState[stop] = !displayState[stop];
+        updateUI();
+    }
 }
 
 // Handle form submission
@@ -114,6 +160,11 @@ document.getElementById('bus-form').addEventListener('submit', (e) => {
 
     // Clear the time input
     document.getElementById('time').value = '';
+});
+
+// Add event listeners to toggle buttons
+document.querySelectorAll('.toggle-button').forEach(button => {
+    button.addEventListener('click', handleToggle);
 });
 
 // Initial UI update when the page loads

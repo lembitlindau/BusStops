@@ -12,13 +12,26 @@ h1 {
     color: #333;
 }
 
+/* Day Type Message */
+#day-type-message {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    color: #555;
+}
+
 /* Form Styles */
 form {
     margin-bottom: 30px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 label {
@@ -59,6 +72,25 @@ button:hover {
 
 .toggle-button:hover {
     background-color: #0056b3;
+}
+
+/* Import Section Styles */
+#import-section, #export-section {
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#import-section h2, #export-section h2 {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+#import-section input[type="file"] {
+    margin-bottom: 10px;
 }
 
 /* Departures Section */
