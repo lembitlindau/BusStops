@@ -16,7 +16,7 @@ const departures = JSON.parse(localStorage.getItem('busSchedule')) || {
         weekend: []
     },
 };
-debugger;
+
 // Function to determine if today is a weekend
 function isWeekend() {
     const today = new Date();

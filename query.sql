@@ -5,5 +5,5 @@ from stations s
 where r.line_id = 1
 
 -- How many lines there are?
-select s.line_id, count(*)
-from routes s
+select count(distinct line_id) as line_count
+from routes;
