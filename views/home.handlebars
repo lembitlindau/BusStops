@@ -1,0 +1,22 @@
+<h1>Bus stops</h1>
+
+{{#if error}}
+    <p class="error">{{error}}</p>
+{{else}}
+
+    {{#if stops}}
+        <ul>
+        {{#each stops}}
+            <li>
+                {{#if this.name}}
+                    {{this.name}}
+                {{else}}
+                    Stop #{{this.id}}
+                {{/if}}
+            </li>
+        {{/each}}
+        </ul>
+    {{else}}
+        <p>No bus stops found.</p>
+    {{/if}}
+{{/if}}

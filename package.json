@@ -1,0 +1,19 @@
+{
+  "name": "busstops_main",
+  "version": "1.0.0",
+  "description": "Busstops is a web application that allows users to view and manage bus departure times for various bus stops. Users can add new bus stops and departure times, and view upcoming departures.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-handlebars": "^8.0.1",
+    "mariadb": "^3.4.0",
+    "nodemon": "^3.1.9"
+  }
+}
