@@ -42,10 +42,10 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE OR REPLACE FUNCTION kontrolli_saabumisaeg()
-RETURNS TRIGGER AS $$
-    BEGIN
-    -- Leia eelmise peatuse aeg
+CREATE TRIGGER kontrolli_saabumisajad_tr
+    BEFORE INSERT ON departures
+    FOR EACH ROW
+BEGIN
     IF EXISTS (
         SELECT 1
         FROM departures
@@ -53,17 +53,9 @@ RETURNS TRIGGER AS $$
           AND departure_time = NEW.departure_time
           AND sequence_number > NEW.sequence_number
     ) THEN
-        RAISE EXCEPTION 'Saabumisaeg peab olema hilisem kui eelmisel peatusel!';
-END IF;
-
-RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER kontrolli_saabumisajad_tr
-    BEFORE INSERT OR UPDATE ON bussipeatused
-                         FOR EACH ROW EXECUTE FUNCTION kontrolli_saabumisaeg();
-
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Saabumisaeg peab olema hilisem kui eelmisel peatusel!';
+    END IF;
 END$$
 
 DELIMITER ;

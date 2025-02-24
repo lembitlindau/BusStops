@@ -1,0 +1,37 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=user
+      - DB_PASSWORD=example
+      - DB_NAME=bus_schedule
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: bus_schedule
+      MYSQL_USER: user
+      MYSQL_PASSWORD: example
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=db
+      - MYSQL_ROOT_PASSWORD=example
+    depends_on:
+      - db
+
+volumes:
+  db_data:

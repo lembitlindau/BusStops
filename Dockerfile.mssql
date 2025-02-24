@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+# Switch to root to install packages
+USER root
+
+# Install prerequisites
+RUN apt-get update && \
+    apt-get install -y curl gnupg2 && \
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create directory for scripts
+RUN mkdir -p /scripts
+
+# Switch back to mssql user
+USER mssql
+
+# Copy initialization script
+COPY ./sql/mssql/dump.sql /scripts/
+
+# Start SQL Server, wait for it to start, run the initialization script, and keep container running
+CMD /bin/bash -c "(/opt/mssql/bin/sqlservr &) && sleep 30 && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -i /scripts/dump.sql && tail -f /dev/null"

@@ -1,4 +1,3 @@
-
 -- MariaDB dump 10.19  Distrib 10.11.8-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: bus_schedule
@@ -24,10 +23,10 @@ DROP TABLE IF EXISTS `stops`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stops` (
-                         `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-                         `name` varchar(191) NOT NULL,
-                         `sequence_number` INT(10) UNSIGNED NOT NULL DEFAULT 0,
-                         PRIMARY KEY (`id`)
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `sequence_number` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -38,8 +37,8 @@ CREATE TABLE `stops` (
 LOCK TABLES `stops` WRITE;
 /*!40000 ALTER TABLE `stops` DISABLE KEYS */;
 INSERT INTO `stops` VALUES
-                        (1,'Tornimäe'),
-                        (2,'Lehmja');
+  (1,'Tornimäe', 1),
+  (2,'Lehmja', 2);
 /*!40000 ALTER TABLE `stops` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -1,0 +1,24 @@
+{
+  "name": "bussiajad",
+  "version": "1.0.0",
+  "description": "This project is a web application for managing and displaying bus departure times for different stops. It allows users to add, remove, and view upcoming departures, as well as import and export departure data in CSV format.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lembitlindau/Bussiajad.git"
+  },
+  "keywords": [],
+  "author": "Your Name",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lembitlindau/Bussiajad/issues"
+  },
+  "homepage": "https://github.com/lembitlindau/Bussiajad#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

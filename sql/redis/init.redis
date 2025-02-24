@@ -1,0 +1,42 @@
+# Redis initialization commands
+
+# Store stops as hashes
+HSET stop:1 name "Kesklinn" latitude 59.4370 longitude 24.7536
+HSET stop:2 name "Ülemiste" latitude 59.4231 longitude 24.7991
+HSET stop:3 name "Mustamäe" latitude 59.4076 longitude 24.6869
+
+# Store routes as hashes
+HSET route:1 number "1A" description "Kesklinn - Mustamäe"
+HSET route:2 number "2" description "Ülemiste - Kesklinn"
+HSET route:3 number "3B" description "Mustamäe - Ülemiste"
+
+# Store schedules using sorted sets for each route-stop combination
+# Score is minutes since midnight for easy sorting
+ZADD schedule:route:1:stop:1 480 "08:00-08:02"
+ZADD schedule:route:1:stop:3 495 "08:15-08:17"
+ZADD schedule:route:2:stop:2 540 "09:00-09:02"
+ZADD schedule:route:2:stop:1 560 "09:20-09:22"
+ZADD schedule:route:3:stop:3 600 "10:00-10:02"
+ZADD schedule:route:3:stop:2 625 "10:25-10:27"
+
+# Create indexes for quick lookups
+SADD stops stop:1 stop:2 stop:3
+SADD routes route:1 route:2 route:3
+SADD days:1 schedule:route:1:stop:1 schedule:route:1:stop:3 schedule:route:2:stop:2 schedule:route:2:stop:1 schedule:route:3:stop:3 schedule:route:3:stop:2
+
+# Example commands to retrieve data:
+
+# Get all stops
+# SMEMBERS stops
+
+# Get stop details
+# HGETALL stop:1
+
+# Get route details
+# HGETALL route:1
+
+# Get schedule for a specific route-stop combination
+# ZRANGE schedule:route:1:stop:1 0 -1
+
+# Get all schedules for a specific day
+# SMEMBERS days:1

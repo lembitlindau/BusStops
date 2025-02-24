@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  # MariaDB (Main database)
+  db:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: bus_schedule
+      MYSQL_USER: user
+      MYSQL_PASSWORD: example
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql/mysql:/docker-entrypoint-initdb.d
+
+  # MySQL
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bus_schedule
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test123
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./sql/mysql:/docker-entrypoint-initdb.d
+
+  # Microsoft SQL Server (Azure SQL Edge)
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    cap_add: [ 'SYS_PTRACE' ]
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=YourStrong@Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./sql/mssql:/scripts
+    command: /bin/bash -c "/opt/mssql/bin/sqlservr & sleep 30 && /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -i /scripts/dump.sql && tail -f /dev/null"
+
+  # PostgreSQL
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: bus_schedule
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql/postgresql:/docker-entrypoint-initdb.d
+
+  # MongoDB
+  mongodb:
+    image: mongo:6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: bus_schedule
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./sql/mongodb:/docker-entrypoint-initdb.d
+
+  # Redis
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./sql/redis:/usr/local/etc/redis
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: test
+      MONGO_INITDB_ROOT_PASSWORD: 123
+      MONGO_INITDB_DATABASE: testdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./docker-volumes/mongodb:/data/db
+
+  # MSSQL
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: floki_mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Test123!"
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  # Redis
+  redis:
+    image: redis:latest
+    container_name: my-redis
+    ports:
+      - "6379:6379"
+    environment:
+      ALLOW_EMPTY_PASSWORD: "no"
+      REDIS_PASSWORD: "123"
+    volumes:
+      - ./docker-volumes/redis:/data
+
+volumes:
+  mssql_data:
+  mysql_data:
+  mariadb_data:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+  db_data:

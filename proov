@@ -1,0 +1,9 @@
+i want to create a api for exante
+it should be able to get the data from the exante api
+i want it to be able to determine the opening price and the price after 30 seconds for sp500 futures
+then i want to be able to get the difference between the opening price and the price after 30 seconds
+i want sell order on the lower price and buy order on the higher price
+i want stop order to be the amount what was the difference between the opening price and the price after 30 seconds
+
+
+
