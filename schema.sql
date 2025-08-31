@@ -41,6 +41,47 @@ INSERT INTO `stops` VALUES
 (2,'Lehmja');
 /*!40000 ALTER TABLE `stops` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `departures`
+--
+
+DROP TABLE IF EXISTS `departures`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `departures` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `stop_id` int(10) unsigned NOT NULL,
+  `departure_time` time NOT NULL,
+  `route_number` varchar(10) NOT NULL,
+  `destination` varchar(191) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `stop_id` (`stop_id`),
+  CONSTRAINT `departures_stop_id_foreign` FOREIGN KEY (`stop_id`) REFERENCES `stops` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `departures`
+--
+
+LOCK TABLES `departures` WRITE;
+/*!40000 ALTER TABLE `departures` DISABLE KEYS */;
+INSERT INTO `departures` VALUES
+(1,1,'08:15:00','1','Kesklinn'),
+(2,1,'08:30:00','1','Kesklinn'),
+(3,1,'08:45:00','1','Kesklinn'),
+(4,1,'09:00:00','2','Mustamäe'),
+(5,1,'09:15:00','1','Kesklinn'),
+(6,1,'09:30:00','2','Mustamäe'),
+(7,2,'08:20:00','3','Tallinn'),
+(8,2,'08:40:00','3','Tallinn'),
+(9,2,'09:00:00','4','Tartu'),
+(10,2,'09:20:00','3','Tallinn'),
+(11,2,'09:40:00','4','Tartu'),
+(12,2,'10:00:00','3','Tallinn');
+/*!40000 ALTER TABLE `departures` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

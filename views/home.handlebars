@@ -1,22 +1,118 @@
 <h1>Bus stops</h1>
 
 {{#if error}}
-    <p class="error">{{error}}</p>
+    <div class="alert alert-danger">{{error}}</div>
 {{else}}
 
     {{#if stops}}
-        <ul>
-        {{#each stops}}
-            <li>
-                {{#if this.name}}
-                    {{this.name}}
-                {{else}}
-                    Stop #{{this.id}}
-                {{/if}}
-            </li>
-        {{/each}}
-        </ul>
+        <div class="row">
+            <div class="col-md-8">
+                <ul class="list-group">
+                {{#each stops}}
+                    <li class="list-group-item">
+                        <a href="#" class="bus-stop-link" data-stop-id="{{this.id}}" data-bs-toggle="modal" data-bs-target="#departuresModal">
+                            {{#if this.name}}
+                                {{this.name}}
+                            {{else}}
+                                Stop #{{this.id}}
+                            {{/if}}
+                        </a>
+                    </li>
+                {{/each}}
+                </ul>
+            </div>
+        </div>
     {{else}}
-        <p>No bus stops found.</p>
+        <div class="alert alert-info">No bus stops found.</div>
     {{/if}}
 {{/if}}
+
+<!-- Departures Modal -->
+<div class="modal fade" id="departuresModal" tabindex="-1" aria-labelledby="departuresModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="departuresModalLabel">Departures</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="loading" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Loading departures...</p>
+                </div>
+                <div id="departures-content" style="display: none;">
+                    <div id="departures-list"></div>
+                </div>
+                <div id="error-content" style="display: none;">
+                    <div class="alert alert-danger">Failed to load departures. Please try again.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('departuresModal');
+    const modalTitle = document.getElementById('departuresModalLabel');
+    const loading = document.getElementById('loading');
+    const departuresContent = document.getElementById('departures-content');
+    const departuresList = document.getElementById('departures-list');
+    const errorContent = document.getElementById('error-content');
+    
+    // Handle bus stop link clicks
+    document.querySelectorAll('.bus-stop-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const stopId = this.getAttribute('data-stop-id');
+            const stopName = this.textContent.trim();
+            
+            // Update modal title
+            modalTitle.textContent = `Departures for ${stopName}`;
+            
+            // Reset modal state
+            loading.style.display = 'block';
+            departuresContent.style.display = 'none';
+            errorContent.style.display = 'none';
+            
+            // Fetch departures
+            fetch(`/api/departures/${stopId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(departures => {
+                    loading.style.display = 'none';
+                    
+                    if (departures.length === 0) {
+                        departuresList.innerHTML = '<div class="alert alert-info">No departures found for this stop.</div>';
+                    } else {
+                        let html = '<div class="table-responsive"><table class="table table-striped"><thead><tr><th>Time</th><th>Route</th><th>Destination</th></tr></thead><tbody>';
+                        
+                        departures.forEach(departure => {
+                            html += `<tr>
+                                <td><span class="departure-time">${departure.departure_time}</span></td>
+                                <td><span class="route-number">${departure.route_number}</span></td>
+                                <td>${departure.destination}</td>
+                            </tr>`;
+                        });
+                        
+                        html += '</tbody></table></div>';
+                        departuresList.innerHTML = html;
+                    }
+                    
+                    departuresContent.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching departures:', error);
+                    loading.style.display = 'none';
+                    errorContent.style.display = 'block';
+                });
+        });
+    });
+});
+</script>

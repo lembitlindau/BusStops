@@ -17,6 +17,9 @@ const pool = mariadb.createPool({
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+// Serve static files
+app.use(express.static('public'));
+
 // Set up Handlebars
 app.engine('handlebars', exphbs.engine());
 app.set('view engine', 'handlebars');
@@ -41,6 +44,31 @@ app.get('/', async (req, res) => {
         });
     } finally {
         if (conn) conn.release(); // Release connection back to pool
+    }
+});
+
+// API endpoint to get departures for a specific stop
+app.get('/api/departures/:stopId', async (req, res) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const stopId = parseInt(req.params.stopId);
+        
+        // Get departures for the stop, sorted by departure time
+        const departures = await conn.query(`
+            SELECT d.*, s.name as stop_name 
+            FROM departures d 
+            JOIN stops s ON d.stop_id = s.id 
+            WHERE d.stop_id = ? 
+            ORDER BY d.departure_time ASC
+        `, [stopId]);
+        
+        res.json(departures);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch departures' });
+    } finally {
+        if (conn) conn.release();
     }
 });
 
