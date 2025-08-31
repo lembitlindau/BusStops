@@ -55,6 +55,7 @@ CREATE TABLE `departures` (
   `departure_time` time NOT NULL,
   `route_number` varchar(10) NOT NULL,
   `destination` varchar(191) NOT NULL,
+  `day_type` enum('weekdays','weekends') NOT NULL DEFAULT 'weekdays',
   PRIMARY KEY (`id`),
   KEY `stop_id` (`stop_id`),
   CONSTRAINT `departures_stop_id_foreign` FOREIGN KEY (`stop_id`) REFERENCES `stops` (`id`) ON DELETE CASCADE
@@ -68,18 +69,22 @@ CREATE TABLE `departures` (
 LOCK TABLES `departures` WRITE;
 /*!40000 ALTER TABLE `departures` DISABLE KEYS */;
 INSERT INTO `departures` VALUES
-(1,1,'08:15:00','1','Kesklinn'),
-(2,1,'08:30:00','1','Kesklinn'),
-(3,1,'08:45:00','1','Kesklinn'),
-(4,1,'09:00:00','2','Mustamäe'),
-(5,1,'09:15:00','1','Kesklinn'),
-(6,1,'09:30:00','2','Mustamäe'),
-(7,2,'08:20:00','3','Tallinn'),
-(8,2,'08:40:00','3','Tallinn'),
-(9,2,'09:00:00','4','Tartu'),
-(10,2,'09:20:00','3','Tallinn'),
-(11,2,'09:40:00','4','Tartu'),
-(12,2,'10:00:00','3','Tallinn');
+(1,1,'08:15:00','1','Kesklinn','weekdays'),
+(2,1,'08:30:00','1','Kesklinn','weekdays'),
+(3,1,'08:45:00','1','Kesklinn','weekdays'),
+(4,1,'09:00:00','2','Mustamäe','weekdays'),
+(5,1,'09:15:00','1','Kesklinn','weekdays'),
+(6,1,'09:30:00','2','Mustamäe','weekdays'),
+(7,2,'08:20:00','3','Tallinn','weekdays'),
+(8,2,'08:40:00','3','Tallinn','weekdays'),
+(9,2,'09:00:00','4','Tartu','weekdays'),
+(10,2,'09:20:00','3','Tallinn','weekdays'),
+(11,2,'09:40:00','4','Tartu','weekdays'),
+(12,2,'10:00:00','3','Tallinn','weekdays'),
+(13,1,'09:15:00','1','Kesklinn','weekends'),
+(14,1,'10:00:00','2','Mustamäe','weekends'),
+(15,2,'09:30:00','3','Tallinn','weekends'),
+(16,2,'10:30:00','4','Tartu','weekends');
 /*!40000 ALTER TABLE `departures` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

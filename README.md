@@ -4,10 +4,22 @@
 BusStops is a web application that allows users to view and manage bus departure times for various bus stops. Users can add new bus stops and departure times, and view upcoming departures.
 
 ## Features
-- [ ] View bus departure times for different stops
+- [x] View bus departure times for different stops
+- [x] View departures in a modal by clicking on bus stop names
+- [x] Add new bus departures with departure time and day type (weekdays/weekends)
 - [ ] Add new bus stops
-- [ ] Add new departure times
 - [ ] Toggle visibility of all departures for each stop
+
+## Current Functionality
+1. **View Bus Stops**: See a list of all available bus stops
+2. **View Departures**: Click on any bus stop name to see departures in a modal, sorted by time
+3. **Add Departures**: Use the form on the right side to add new bus departures:
+   - Choose a bus stop from dropdown
+   - Enter departure time
+   - Enter route number
+   - Enter destination
+   - Select day type (weekdays or weekends)
+   - Click the green "Add Departure" button
 
 ## Technologies Used
 - HTML

@@ -7,7 +7,8 @@
     {{#if stops}}
         <div class="row">
             <div class="col-md-8">
-                <ul class="list-group">
+                <h3>Bus Stops</h3>
+                <ul class="list-group mb-4">
                 {{#each stops}}
                     <li class="list-group-item">
                         <a href="#" class="bus-stop-link" data-stop-id="{{this.id}}" data-bs-toggle="modal" data-bs-target="#departuresModal">
@@ -20,6 +21,46 @@
                     </li>
                 {{/each}}
                 </ul>
+            </div>
+            <div class="col-md-4">
+                <h3>Add New Departure</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <form id="addDepartureForm">
+                            <div class="mb-3">
+                                <label for="stop_id" class="form-label">Bus Stop</label>
+                                <select class="form-select" id="stop_id" name="stop_id" required>
+                                    <option value="">Choose a bus stop...</option>
+                                    {{#each stops}}
+                                    <option value="{{this.id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="departure_time" class="form-label">Departure Time</label>
+                                <input type="time" class="form-control" id="departure_time" name="departure_time" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="route_number" class="form-label">Route Number</label>
+                                <input type="text" class="form-control" id="route_number" name="route_number" placeholder="e.g., 1, 2A, 15" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="destination" class="form-label">Destination</label>
+                                <input type="text" class="form-control" id="destination" name="destination" placeholder="e.g., Kesklinn, Mustamäe" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="day_type" class="form-label">Day Type</label>
+                                <select class="form-select" id="day_type" name="day_type" required>
+                                    <option value="">Choose day type...</option>
+                                    <option value="weekdays">Weekdays</option>
+                                    <option value="weekends">Weekends</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Add Departure</button>
+                        </form>
+                        <div id="addDepartureMessage" class="mt-3" style="display: none;"></div>
+                    </div>
+                </div>
             </div>
         </div>
     {{else}}
@@ -61,6 +102,59 @@ document.addEventListener('DOMContentLoaded', function() {
     const departuresContent = document.getElementById('departures-content');
     const departuresList = document.getElementById('departures-list');
     const errorContent = document.getElementById('error-content');
+    
+    // Handle add departure form submission
+    const addDepartureForm = document.getElementById('addDepartureForm');
+    const addDepartureMessage = document.getElementById('addDepartureMessage');
+    
+    addDepartureForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Adding...';
+        
+        fetch('/add-departure', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                addDepartureMessage.className = 'alert alert-success mt-3';
+                addDepartureMessage.textContent = result.message;
+                addDepartureMessage.style.display = 'block';
+                addDepartureForm.reset();
+            } else {
+                addDepartureMessage.className = 'alert alert-danger mt-3';
+                addDepartureMessage.textContent = result.error;
+                addDepartureMessage.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addDepartureMessage.className = 'alert alert-danger mt-3';
+            addDepartureMessage.textContent = 'Failed to add departure. Please try again.';
+            addDepartureMessage.style.display = 'block';
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                addDepartureMessage.style.display = 'none';
+            }, 5000);
+        });
+    });
     
     // Handle bus stop link clicks
     document.querySelectorAll('.bus-stop-link').forEach(link => {
